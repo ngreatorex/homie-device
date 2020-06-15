@@ -28,19 +28,30 @@
     "registry": "https://registry.npmjs.org"
   },
   "devDependencies": {
-    "chai": "^4.1.1",
-    "mocha": "^3.5.0",
-    "nyc": "^14.0.0",
-    "proxyquire": "^1.8.0",
+    "@bazel/typescript": "^1.2.4",
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@types/chai": "^4.2.11",
+    "@types/faker": "^4.1.12",
+    "@types/mocha": "^7.0.2",
+    "@types/sinon": "^9.0.4",
+    "chai": "^4.2.0",
+    "faker": "^4.1.0",
+    "mocha": "^7.2.0",
+    "nyc": "^14.1.1",
+    "sinon": "^9.0.2",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.3",
     "watch": "^1.0.2"
   },
   "dependencies": {
-    "lodash": "^4.13.1",
-    "mqtt": "^2.11.0"
+    "@types/lodash": "^4.14.154",
+    "@types/node": "^13.13.9",
+    "lodash": "^4.17.15",
+    "mqtt": "^2.18.8"
   },
   "scripts": {
     "watch": "watch 'npm run test' .",
-    "test": "mocha",
-    "coverage": "nyc --reporter=text mocha"
+    "test": "nyc --source-map --include 'src/**/*.ts' mocha --exit -r ts-node/register --grep '#Integration' --invert test/**/*.ts",
+    "build": "tsc"
   }
 }
