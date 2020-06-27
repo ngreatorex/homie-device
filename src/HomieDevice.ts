@@ -1,11 +1,12 @@
 import _ from 'lodash';
-import pkgJson from '../package.json';
-const homieVersion = '3.0.1';
-const homieImplName = `nodejs:${pkgJson.name}`;
-const homieImplVersion = pkgJson.version;
 import mqtt, { MqttClient, IClientOptions } from 'mqtt';
 import HomieNode, { IHomieNodeConfiguration } from './HomieNode';
 import { HomieTopologyRoot, IHomieTopologyConfiguration } from './framework';
+
+const pkgJson = require('../package.json') as any;
+const homieVersion = '3.0.1';
+const homieImplName = `nodejs:${pkgJson.name}`;
+const homieImplVersion = pkgJson.version;
 
 export interface IMqttConfiguration {
     base_topic: string,
