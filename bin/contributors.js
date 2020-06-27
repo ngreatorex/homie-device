@@ -7,7 +7,7 @@ var request = require('request'),
     fs = require('fs');
 
 // Constants
-REPO = 'lorenwest/homie-device';
+REPO = 'chrispyduck/homie-device';
 README_FILE = './README.md';
 
 // HTML template parts
@@ -24,7 +24,7 @@ function getContributorTable(callback) {
   var options = {
     url: 'https://api.github.com/repos/' + REPO + '/contributors',
     headers: {
-      'User-Agent': 'README.md contributor generator, github/lorenwest'
+      'User-Agent': 'README.md contributor generator, github/chrispyduck'
     }
   }
   request(options, function(error, response, body) {
