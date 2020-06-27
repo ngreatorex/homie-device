@@ -2,13 +2,13 @@ import HomieTopologyWithConfiguration from "../src/framework/HomieTopologyWithCo
 import HomieDevice from "../src/HomieDevice";
 import * as _mocha from "mocha";
 import { expect } from "chai";
-import HomieNode from "../src/homieNode";
+import HomieNode from "../src/HomieNode";
 import IHomieTopologyConfiguration from "../src/framework/IHomieTopologyConfiguration";
 import { makeDevice } from "./1-HomieDevice";
 import _ from "lodash";
 import { fail } from "assert";
 import { makeNodeConfig } from "./2-HomieNode";
-import HomieProperty, { PropertyDataType } from "../src/homieProperty";
+import HomieProperty, { PropertyDataType } from "../src/HomieProperty";
 import { makePropertyConfig } from "./3-HomieProperty";
 
 function EvaluateType<T extends HomieTopologyWithConfiguration<IHomieTopologyConfiguration>>(

@@ -1,8 +1,8 @@
 import { expect } from "chai";
-import HomieProperty, { DefaultConfiguration as DefaultPropertyConfiguration, IHomiePropertyConfiguration, PropertyDataType } from '../src/homieProperty';
+import HomieProperty, { DefaultConfiguration as DefaultPropertyConfiguration, IHomiePropertyConfiguration, PropertyDataType } from '../src/HomieProperty';
 import { IHomieDeviceConfiguration } from "../src/HomieDevice";
 import _ from "lodash";
-import { IHomieNodeConfiguration } from "../src/homieNode";
+import { IHomieNodeConfiguration } from "../src/HomieNode";
 import { makeNode, IHomieNodeTest } from "./2-HomieNode";
 import * as faker from "faker";
 

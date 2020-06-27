@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import HomieNode, { IHomieNodeConfiguration, DefaultConfiguration as DefaultNodeConfiguration } from '../src/homieNode';
+import HomieNode, { IHomieNodeConfiguration, DefaultConfiguration as DefaultNodeConfiguration } from '../src/HomieNode';
 import { IHomieDeviceConfiguration } from "../src/HomieDevice";
 import * as faker from "faker";
 import * as _ from "lodash";

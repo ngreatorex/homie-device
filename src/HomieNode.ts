@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import HomieProperty, { IHomiePropertyConfiguration } from './homieProperty';
+import HomieProperty, { IHomiePropertyConfiguration } from './HomieProperty';
 import HomieDevice from './HomieDevice';
 import { HomieTopologyElement } from './framework/HomieTopologyElement';
 import { IClientPublishOptions } from 'mqtt';
