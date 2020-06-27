@@ -3,7 +3,7 @@ import { IClientPublishOptions } from "mqtt";
 import IHomieTopologyConfiguration from "./IHomieTopologyConfiguration";
 import HomieTopologyWithConfiguration from "./HomieTopologyWithConfiguration";
 
-export abstract class HomieTopologyElement<TParent extends HomieTopologyBase, TConfig extends IHomieTopologyConfiguration> extends HomieTopologyWithConfiguration<TConfig> {
+export default abstract class HomieTopologyElement<TParent extends HomieTopologyBase, TConfig extends IHomieTopologyConfiguration> extends HomieTopologyWithConfiguration<TConfig> {
     private _parent: TParent;
     
     constructor(config: TConfig, parent: TParent) {

@@ -1,7 +1,6 @@
 import _ from 'lodash';
-import { HomieTopologyElement } from './framework/HomieTopologyElement';
+import { HomieTopologyElement, IHomieTopologyConfiguration } from './framework';
 import HomieNode from './HomieNode';
-import IHomieTopologyConfiguration from './framework/IHomieTopologyConfiguration';
 
 export enum PropertyDataType {
   integer, 

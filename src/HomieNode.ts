@@ -1,9 +1,8 @@
 import _ from 'lodash';
 import HomieProperty, { IHomiePropertyConfiguration } from './HomieProperty';
 import HomieDevice from './HomieDevice';
-import { HomieTopologyElement } from './framework/HomieTopologyElement';
+import { HomieTopologyElement, IHomieTopologyConfiguration } from './framework';
 import { IClientPublishOptions } from 'mqtt';
-import IHomieTopologyConfiguration from './framework/IHomieTopologyConfiguration';
 
 export interface IHomieNodeConfiguration extends IHomieTopologyConfiguration {
   name: string,

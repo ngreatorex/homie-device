@@ -1,9 +1,8 @@
-import HomieTopologyWithConfiguration from "../src/framework/HomieTopologyWithConfiguration";
+import { HomieTopologyWithConfiguration, IHomieTopologyConfiguration } from "../src/framework";
 import HomieDevice from "../src/HomieDevice";
 import * as _mocha from "mocha";
 import { expect } from "chai";
 import HomieNode from "../src/HomieNode";
-import IHomieTopologyConfiguration from "../src/framework/IHomieTopologyConfiguration";
 import { makeDevice } from "./1-HomieDevice";
 import _ from "lodash";
 import { fail } from "assert";

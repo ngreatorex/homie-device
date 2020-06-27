@@ -5,8 +5,7 @@ const homieImplName = `nodejs:${pkgJson.name}`;
 const homieImplVersion = pkgJson.version;
 import mqtt, { MqttClient, IClientOptions } from 'mqtt';
 import HomieNode, { IHomieNodeConfiguration } from './HomieNode';
-import HomieTopologyRoot from './framework/HomieTopologyRoot';
-import IHomieTopologyConfiguration from './framework/IHomieTopologyConfiguration';
+import { HomieTopologyRoot, IHomieTopologyConfiguration } from './framework';
 
 export interface IMqttConfiguration {
     base_topic: string,
