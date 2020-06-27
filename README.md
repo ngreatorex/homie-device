@@ -1,23 +1,17 @@
 Homie Device
 ============
 
-[![NPM](https://nodei.co/npm/homie-device.svg?downloads=true&downloadRank=true)](https://nodei.co/npm/homie-device/)&nbsp;&nbsp;
-[![Build Status](https://secure.travis-ci.org/microclimates/homie-device.svg?branch=master)](https://travis-ci.org/microclimates/homie-device)&nbsp;&nbsp;
-[release notes](https://github.com/microclimates/homie-device/blob/master/History.md)
+[![Build Status](https://travis-ci.org/chrispyduck/homie-device.svg?branch=master)](https://travis-ci.org/chrispyduck/homie-device)&nbsp;&nbsp;
+[![Coverage Status](https://coveralls.io/repos/github/chrispyduck/homie-device/badge.svg?branch=master)](https://coveralls.io/github/chrispyduck/homie-device?branch=master)&nbsp;&nbsp;
 
-This is a NodeJS port of the [Homie convention](https://github.com/marvinroger/homie) for lightweight IoT device interaction on an [MQTT](https://en.wikipedia.org/wiki/MQTT) message bus.
-
-It is modeled after the great work done for [ESP8266 devices](https://github.com/marvinroger/homie-esp8266), with the goal of not only following the Homie Convention, but at adhering to the implementation interface so both message and API interfaces are familiar.
-
-It's great for mixing ESP8266 devices with Raspberry Pi and other linux or windows based systems on the same MQTT network.
+This is a TypeScript port [NodeJS port](https://github.com/microclimates/homie-device) of the [Homie convention](https://github.com/marvinroger/homie) for lightweight IoT device interaction on an [MQTT](https://en.wikipedia.org/wiki/MQTT) message bus. It includes several modifications to make the API a bit easier to use.
 
 Features
 --------
 
-* Device, Node, and Property with ESP8266-like interface
+* Device, Node, and Property
 * Auto MQTT connect with optional username/password
 * Auto MQTT re-connect
-* Device config matching ESP8266 config JSON
 * Periodic $stats/uptime publishing
 * $online will
 * Device topic events
@@ -28,7 +22,6 @@ Features
 * Settable properties
 * Property ranges
 * Lightweight
-* Full test coverage
 
 Quick Start
 -----------

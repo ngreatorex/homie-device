@@ -1,15 +1,20 @@
 language: node_js
-
 before_script:
-  - npm install
-  - npm run build
-
+- npm install
+- npm run build
+- npm version 1.0.${TRAVIS_BUILD_NUMBER}
 script:
-  - npm run test
-
-after_success: 
-  - npm run coverage
-
+- npm run test
+after_success:
+- npm run coverage
 node_js:
-  - "14"
-  - "12"
+- '14'
+- '12'
+deploy:
+  provider: npm
+  email: chris@compucounts.com
+  api_key:
+    secure: b5Qd7jgg0plgfYpyaK1HQPhoslOAT6lxY1yGo27T+qciHeQ4i9LKOR+EfXfQTdAPqXYWjQGMN2AR6m9hjvbzeUGFkJAO92VC1PlZM+mdbSNDhpr96J/E7X1qrUutMoqDzW9xeL0jm43EYYYKeiHhi92RBWncx+OHNzyFuyi+hS/vxMn/NglY+0Ivhk0gxuCiXRg7t3L1OSobyy5D+Tn/TnISETy4T/I4iM0NUEieuQwyjuCFo1adUEP3e7toci6qTmg0Sqx4YTviP1OJ4gZ3UGaPJaMAsZMQreKSCJ+StEwT+Qyb86ic/3i2WCWMlYAJCu+s8wC07VFG3odzv0VWg0V29o0B5uc77D3Qpae1NiktEdXRDWfyWcoXk4fVNy8W+Sj+B6lEQU/cj0dYUOTbMsqNg+kgym0kX3XOnOiBLBcAUxO3CDHpfSRjiuXcRU6CLpoNhn1rtEHQuX/CHPaISBuODDwTvh4RMbthShqGcfe2INM0CFrerDcw1gk2mgXIDSNsVcRizCvDlqbX3bSAEKojY9l5bjDF0iZwEM0M2VOz+x7DkOZwEXlFamAyANBvrX1UiWR7LGlo0zkgKwoEqjMbuyJZ3fkG7CeVvIW3D9GrGBSq7qmh1NsWZQN4yXhUXdN+JJS7QcHP4I48cGLtD5x6sokbYOYP1f+NCWqNfSw=
+  on:
+    branch: master
+  skip_cleanup: 'true'
