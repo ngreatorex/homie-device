@@ -9,20 +9,22 @@ const homieImplName = `nodejs:${pkgJson.name}`;
 const homieImplVersion = pkgJson.version;
 
 export interface IMqttConfiguration {
-    base_topic: string,
-    client: IClientOptions,
-    connectionFactory: (options: IClientOptions) => MqttClient,
+  base_topic?: string,
+  client?: IClientOptions,
+  connectionFactory?: (options: IClientOptions) => MqttClient,
 }
 
 export interface IHomieDeviceConfiguration extends IHomieTopologyConfiguration {
-    mqtt: IMqttConfiguration,
-    settings: any,
-    ip: any,
-    mac: any,
-    statsInterval: number,
-    firmwareName: string,
-    firmwareVersion: string,
+  mqtt?: IMqttConfiguration,
+  settings?: any,
+  ip?: string | null,
+  mac?: string | null,
+  statsInterval?: number,
+  firmwareName?: string,
+  firmwareVersion?: string,
 }
+
+const DefaultStatsInterval = 60;
 
 export const DefaultConfiguration = {
   name: "",
@@ -40,7 +42,7 @@ export const DefaultConfiguration = {
   settings: {},
   ip: null,
   mac: null,
-  statsInterval: 60,
+  statsInterval: DefaultStatsInterval,
 } as IHomieDeviceConfiguration
 
 export default class HomieDevice extends HomieTopologyRoot {
@@ -60,30 +62,32 @@ export default class HomieDevice extends HomieTopologyRoot {
 
   constructor(config: IHomieDeviceConfiguration | string) {
     super(HomieDevice.validateConfig(config));
-    
+
     this._startTime = Date.now();
     this._nodes = {};
-    this._statsInterval = this.config.statsInterval;
+    this._statsInterval = this.config.statsInterval ?? DefaultStatsInterval;
     this._mqttClient = null;
-  }  
+  }
 
   node = (config: IHomieNodeConfiguration): HomieNode => {
-    if (!this._configurable)
-      throw new Error('This HomieDevice is no longer configurable. All configuration must occur prior to connecting.');
+    super.assertConfigurable();
+    this.logger.debug(`Registering new node "${config.friendlyName}" (${config.name})`);
     return this._nodes[config.name] = new HomieNode(this, config);
   }
 
   setup = () => {
     this._configurable = false;
 
-    const opts = _.merge({}, this.config.mqtt.client, {
+    const opts = _.merge({}, this.config.mqtt?.client, {
       will: {
         topic: `${this.name}/$state`,
         payload: 'lost',
         qos: 0,
         retain: true
       }
-    });
+    }) as mqtt.IClientOptions;
+    if (typeof this.config.mqtt?.connectionFactory !== "function")
+      throw new Error('No mqtt.connectionFactory is configured. This really shouldn\'t happen.');
     this._mqttClient = this.client = this.config.mqtt.connectionFactory(opts);
     this._mqttClient.on('connect', this.onConnect);
     this._mqttClient.on('close', this.onDisconnect);

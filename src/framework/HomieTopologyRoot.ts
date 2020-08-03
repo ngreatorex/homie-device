@@ -17,7 +17,7 @@ export default abstract class HomieTopologyRoot extends HomieTopologyWithConfigu
     protected rawPublish(path: string, value: string, options: IClientPublishOptions | null | undefined) {
         if (this._client === null)
             throw new Error('client has not been initialized');
-        this._client.publish(`${this.config.mqtt.base_topic}/${path}`, value, options || {} as IClientPublishOptions);
+        this._client.publish(`${this.config.mqtt?.base_topic ?? "homie"}/${path}`, value, options || {} as IClientPublishOptions);
     }
 
     protected rawSubscribe(path: string): void {

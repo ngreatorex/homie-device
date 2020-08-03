@@ -1,17 +1,24 @@
 import { IClientPublishOptions } from 'mqtt';
 import { EventEmitter } from 'events';
 import _ from 'lodash';
+import * as winston from "winston";
 
 export default abstract class HomieTopologyBase extends EventEmitter {
     private _name: string;
     private _friendlyName: string;
     private _isConnected: boolean;
     
+    protected readonly logger: winston.Logger;
+
     constructor(name: string, friendlyName: string) {
         super();
         this._name = name;
         this._friendlyName = friendlyName;
         this._isConnected = false;
+        this.logger = winston.child({
+            type: this.constructor.name,
+            name: this.name,
+        });
     }
 
     public get name() { return this._name; }
@@ -39,6 +46,7 @@ export default abstract class HomieTopologyBase extends EventEmitter {
         else 
             safeOptions = options as IClientPublishOptions;
 
+        this.logger.debug(`publish: ${path} = ${value}`)
         this.rawPublish(`${this.name}/${path}`, value, safeOptions);
     }
 
@@ -87,6 +95,7 @@ export default abstract class HomieTopologyBase extends EventEmitter {
         if (path.startsWith('/'))
             path = path.substring(1);
 
+        this.logger.debug(`subscribing to path "${path}"`);
         this.rawSubscribe(`${this.name}/${path}`);
     }
 
@@ -100,6 +109,7 @@ export default abstract class HomieTopologyBase extends EventEmitter {
      */
     onConnect(): void { 
         this._isConnected = true;
+        this.logger.debug('connected');
         this.emit('connect');
     }
 
@@ -109,6 +119,7 @@ export default abstract class HomieTopologyBase extends EventEmitter {
      */
     onDisconnect(): void { 
         this._isConnected = false;
+        this.logger.debug('disconnected');
         this.emit('disconnect');
     }
 
@@ -118,6 +129,7 @@ export default abstract class HomieTopologyBase extends EventEmitter {
      */
     onOffline(): void { 
         this._isConnected = false;
+        this.logger.debug('offline');
         this.emit('offline');
     }
 
@@ -127,6 +139,7 @@ export default abstract class HomieTopologyBase extends EventEmitter {
      * @param error The error relayed by the MQTT library
      */
     onError(err: Error): void { 
+        this.logger.debug('error', err);
         this.emit('error', err);
     }
 
@@ -135,10 +148,8 @@ export default abstract class HomieTopologyBase extends EventEmitter {
      * @internal
      */
     onStatsInterval(): void { 
+        this.logger.debug('reporting stats');
         this.emit('stats-interval');
     }
 //#endregion
 }
-
-
-

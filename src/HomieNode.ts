@@ -45,7 +45,10 @@ export default class HomieNode extends HomieTopologyElement<HomieDevice, IHomieN
   get endRange(): number | undefined { return this.config.endRange; }
   get properties(): HomieProperty[] { return Object.values(this._properties); }
 
-  addProperty = (config: IHomiePropertyConfiguration): HomieProperty => this._properties[config.name] = new HomieProperty(this, config);
+  addProperty = (config: IHomiePropertyConfiguration): HomieProperty => {
+    super.assertConfigurable();
+    return this._properties[config.name] = new HomieProperty(this, config);
+  }
 
   getProperty = (propName: string): HomieProperty => this._properties[propName];
 
