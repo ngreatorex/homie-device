@@ -58,6 +58,7 @@
     "build": "tsc --build src",
     "rebuild": "npm run clean && npm install && npm run build",
     "test": "nyc --source-map --include 'src/**/*.ts' mocha --exit -r ts-node/register --grep '#Integration' --invert test/**/*.ts",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "postinstall": "build"
   }
 }
