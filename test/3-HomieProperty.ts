@@ -6,7 +6,7 @@ import { IHomieNodeConfiguration } from "../src/HomieNode";
 import HomieProperty, { DefaultConfiguration as DefaultPropertyConfiguration, IHomiePropertyConfiguration, PropertyDataType } from "../src/HomieProperty";
 import { IHomieNodeTest, makeNode } from "./2-HomieNode";
 
-export const makePropertyConfig = (config?: IHomiePropertyConfiguration) => {
+export const makePropertyConfig = (config?: IHomiePropertyConfiguration): IHomiePropertyConfiguration => {
   return _.merge({}, DefaultPropertyConfiguration, {
     datatype: faker.random.arrayElement([
       PropertyDataType.boolean,

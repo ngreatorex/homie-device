@@ -5,7 +5,7 @@ import { IHomieDeviceConfiguration } from "../src/HomieDevice";
 import HomieNode, { DefaultConfiguration as DefaultNodeConfiguration, IHomieNodeConfiguration } from "../src/HomieNode";
 import { IHomieDeviceTest, makeDevice } from "./1-HomieDevice";
 
-export const makeNodeConfig = (config?: IHomieNodeConfiguration) => {
+export const makeNodeConfig = (config?: IHomieNodeConfiguration): IHomieNodeConfiguration => {
   return _.merge({}, DefaultNodeConfiguration, {
     friendlyName: faker.internet.domainWord(),
     name: faker.internet.domainWord(),
@@ -99,9 +99,11 @@ describe("Homie Node", () => {
     });
 
     it("publishes node stats at a determined interval", (done) => {
-      test = makeNode({ deviceConfig: {
-        statsInterval: 0.1,
-      } as unknown as IHomieDeviceConfiguration});
+      test = makeNode({
+        deviceConfig: {
+          statsInterval: 0.1,
+        } as unknown as IHomieDeviceConfiguration
+      });
       let numMsgs = 0;
       test.node.on("stats-interval", () => {
         if (++numMsgs === 3) {

@@ -56,7 +56,7 @@ export default class HomieNode extends HomieTopologyElement<HomieDevice, IHomieN
    * @internal
    * MQTT OnConnect event handler
    */
-  public onConnect = () => {
+  public onConnect = (): void => {
     super.onConnect();
 
     const properties: string[] = [];
@@ -80,7 +80,7 @@ export default class HomieNode extends HomieTopologyElement<HomieDevice, IHomieN
   }
 
   //#region event handlers
-  public onOffline = () => {
+  public onOffline = (): void => {
     super.onOffline();
     _.each(this.properties$, (prop: HomieProperty) => {
       prop.onOffline();
@@ -88,7 +88,7 @@ export default class HomieNode extends HomieTopologyElement<HomieDevice, IHomieN
   }
 
   // Called on mqtt client disconnect
-  public onDisconnect = () => {
+  public onDisconnect = (): void => {
     super.onDisconnect();
     _.each(this.properties$, (prop: HomieProperty) => {
       prop.onDisconnect();
@@ -103,7 +103,7 @@ export default class HomieNode extends HomieTopologyElement<HomieDevice, IHomieN
   }
 
   // Called on every stats interval
-  public onStatsInterval = () => {
+  public onStatsInterval = (): void => {
     super.onStatsInterval();
     _.each(this.properties$, (prop: HomieProperty) => {
       prop.onStatsInterval();
@@ -115,7 +115,7 @@ export default class HomieNode extends HomieTopologyElement<HomieDevice, IHomieN
    * Publishes the value of the given HomieProperty
    * @internal
    */
-  public publishPropertyValue = (property: HomieProperty, value: number | string | boolean) => {
+  public publishPropertyValue = (property: HomieProperty, value: number | string | boolean): void => {
     const topic = this.isRange
       ? `${this.name}_${property.rangeIndex}/${property.name}`
       : `${this.name}/${property.name}`;

@@ -3,8 +3,11 @@ import mqtt, { IClientOptions, MqttClient } from "mqtt";
 import { HomieTopologyRoot, IHomieTopologyConfiguration } from "./framework";
 import HomieNode, { IHomieNodeConfiguration } from "./HomieNode";
 
-// tslint:disable-next-line:no-var-requires
-const pkgJson = require("../package.json") as any;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const pkgJson = require("../package.json") as { 
+  name: string,
+  version: string,
+};
 const homieVersion = "3.0.1";
 const homieImplName = `nodejs:${pkgJson.name}`;
 const homieImplVersion = pkgJson.version;
@@ -17,7 +20,7 @@ export interface IMqttConfiguration {
 
 export interface IHomieDeviceConfiguration extends IHomieTopologyConfiguration {
   mqtt?: IMqttConfiguration;
-  settings?: any;
+  settings?: unknown;
   ip?: string | null;
   mac?: string | null;
   statsInterval?: number;
@@ -75,7 +78,7 @@ export default class HomieDevice extends HomieTopologyRoot {
     return this.nodes$[config.name] = new HomieNode(this, config);
   }
 
-  public setup = () => {
+  public setup = (): void => {
     // tslint:disable-next-line:whitespace
     const opts = _.merge({}, this.config.mqtt?.client, {
       will: {
@@ -86,16 +89,16 @@ export default class HomieDevice extends HomieTopologyRoot {
       },
     }) as mqtt.IClientOptions;
     // tslint:disable-next-line:whitespace
-    if (typeof this.config.mqtt?.connectionFactory !== "function") {
+    if (!this.config.mqtt || typeof this.config.mqtt?.connectionFactory !== "function") {
       throw new Error("No mqtt.connectionFactory is configured. This really shouldn't happen.");
     }
-    this.mqttClient$ = this.client = this.config.mqtt.connectionFactory!(opts);
+    this.mqttClient$ = this.client = this.config.mqtt.connectionFactory(opts);
     this.mqttClient$.on("connect", this.onConnect);
     this.mqttClient$.on("close", this.onDisconnect);
     this.mqttClient$.on("offline", this.onOffline);
     this.mqttClient$.on("error", this.onError);
     this.mqttClient$.on("message", (topic: string, payload: Buffer) => {
-      this.onMessage(topic, !!payload ? payload.toString() : null);
+      this.onMessage(topic, payload ? payload.toString() : null);
     });
 
     this.subscribe(`${this.name}/#`);
@@ -105,7 +108,7 @@ export default class HomieDevice extends HomieTopologyRoot {
   }
 
   /** Stops this device */
-  public end = () => {
+  public end = (): void => {
     if (this.mqttClient$ === null) {
       throw new Error("client has not been initialized");
     }
@@ -113,7 +116,7 @@ export default class HomieDevice extends HomieTopologyRoot {
     this.mqttClient$.end();
   }
 
-  public onConnect = () => {
+  public onConnect = (): void => {
     this.logger.verbose("Connected... creating standard publications and subscriptions");
     const nodes: string[] = [];
     _.each(this.nodes$, (node: HomieNode) => {
@@ -147,7 +150,7 @@ export default class HomieDevice extends HomieTopologyRoot {
     this.publishAttribute("state", "ready");
   }
 
-  public onDisconnect = () => {
+  public onDisconnect = (): void => {
     super.onDisconnect();
     if (this.interval$ != null) {
       clearInterval(this.interval$);
@@ -158,7 +161,7 @@ export default class HomieDevice extends HomieTopologyRoot {
     });
   }
 
-  public onOffline = () => {
+  public onOffline = (): void => {
     super.onOffline();
     _.each(this.nodes$, (node: HomieNode) => {
       node.onOffline();
@@ -166,14 +169,14 @@ export default class HomieDevice extends HomieTopologyRoot {
   }
 
   /** MQTT client error handler */
-  public onError = (err: Error) => {
+  public onError = (err: Error): void => {
     super.onError(err);
     _.each(this.nodes$, (node: HomieNode) => {
       node.onError(err);
     });
   }
 
-  public onStatsInterval() {
+  public onStatsInterval(): void {
     super.onStatsInterval();
     const uptime = (Date.now() - this.startTime$) / 1000;
     this.publishStats({
@@ -185,7 +188,7 @@ export default class HomieDevice extends HomieTopologyRoot {
     });
   }
 
-  private onMessage = (topic: string, msg: string | null) => {
+  private onMessage = (topic: string, msg: string | null): void => {
     const parts = topic.split("/");
     const deviceTopic = parts.slice(2).join("/");
     this.logger.debug(`received message: parts=${topic}, deviceTopic=${deviceTopic}`);
@@ -222,7 +225,7 @@ export default class HomieDevice extends HomieTopologyRoot {
 
       if (node && node.isRange === range.isRange) {
         const prop = node.getProperty(propName);
-        if (!!prop) {
+        if (prop) {
           prop.invokeSetter(range, value);
         }
       }

@@ -1,8 +1,7 @@
 Homie Device
 ============
 
-[![Build Status](https://travis-ci.org/chrispyduck/homie-device.svg?branch=master)](https://travis-ci.org/chrispyduck/homie-device)&nbsp;&nbsp;
-[![Coverage Status](https://coveralls.io/repos/github/chrispyduck/homie-device/badge.svg?branch=master)](https://coveralls.io/github/chrispyduck/homie-device?branch=master)&nbsp;&nbsp;
+![CI](https://github.com/chrispyduck/homie-device/workflows/CI/badge.svg)
 
 This is a (substantially rewritten) TypeScript port of a [NodeJS port](https://github.com/microclimates/homie-device) of the [Homie convention](https://github.com/marvinroger/homie) for lightweight IoT device interaction on an [MQTT](https://en.wikipedia.org/wiki/MQTT) message bus. It includes several modifications to make the API a bit easier to use.
 

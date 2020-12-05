@@ -33,13 +33,13 @@ export default class HomieProperty extends HomieTopologyElement<HomieNode, IHomi
   }
 
   public set unit(value: string | undefined) { this.config.unit = value; }
-  public get unit() { return this.config.unit; }
+  public get unit(): string | undefined { return this.config.unit; }
 
   public set datatype(value: PropertyDataType) { this.config.dataType = value; }
-  public get datatype() { return this.config.dataType; }
+  public get datatype(): PropertyDataType { return this.config.dataType; }
 
   public set format(value: string | undefined) { this.config.format = value; }
-  public get format() { return this.config.format; }
+  public get format(): string | undefined { return this.config.format; }
 
   public set retained(value: boolean) {
     if (!_.isBoolean(value)) {
@@ -47,7 +47,7 @@ export default class HomieProperty extends HomieTopologyElement<HomieNode, IHomi
     }
     this.config.retained = value;
   }
-  public get retained() { return this.config.retained; }
+  public get retained(): boolean { return this.config.retained; }
 
   public set rangeIndex(value: number | null | undefined) {
     if (!_.isInteger(value)) {
@@ -56,9 +56,9 @@ export default class HomieProperty extends HomieTopologyElement<HomieNode, IHomi
 
     this.rangeIndex$ = value;
   }
-  public get rangeIndex() { return this.rangeIndex$; }
+  public get rangeIndex(): number | null | undefined { return this.rangeIndex$; }
 
-  public get settable() { return this.config.settable; }
+  public get settable(): boolean { return this.config.settable; }
   public set settable(value: boolean) {
     if (!_.isBoolean(value)) {
       throw new Error("retained must be a boolean");
@@ -66,7 +66,7 @@ export default class HomieProperty extends HomieTopologyElement<HomieNode, IHomi
     this.config.settable = value;
   }
 
-  public onConnect = () => {
+  public onConnect = (): void => {
     super.onConnect();
     this.publishAttributes({
       datatype: _.isNumber(this.config.dataType) ? PropertyDataType[this.config.dataType] : this.config.dataType,
@@ -82,7 +82,7 @@ export default class HomieProperty extends HomieTopologyElement<HomieNode, IHomi
    * Emits the 'set' event
    * @internal
    */
-  public invokeSetter = (range: { isRange: boolean, index?: number }, value: string | null) => {
+  public invokeSetter = (range: { isRange: boolean, index?: number }, value: string | null): void => {
     if (!this.config.settable) {
       throw new Error("This property is not settable");
     }

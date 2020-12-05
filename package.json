@@ -34,9 +34,13 @@
     "@types/chai": "^4.2.11",
     "@types/faker": "^4.1.12",
     "@types/mocha": "^7.0.2",
+    "@types/node": "^13.13.34",
     "@types/sinon": "^9.0.4",
+    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "@typescript-eslint/parser": "^4.9.0",
     "chai": "^4.2.0",
     "coveralls": "^3.1.0",
+    "eslint": "^7.15.0",
     "faker": "^4.1.0",
     "mocha": "^7.2.0",
     "nyc": "^14.1.1",
@@ -48,7 +52,6 @@
   },
   "dependencies": {
     "@types/lodash": "^4.14.154",
-    "@types/node": "^13.13.9",
     "lodash": "^4.17.19",
     "mqtt": "^2.18.8",
     "winston": "^3.3.3"
@@ -60,6 +63,6 @@
     "rebuild": "npm run clean && npm install && npm run build",
     "test": "nyc --source-map --include 'src/**/*.ts' mocha --exit -r ts-node/register --grep '#Integration' --invert test/**/*.ts",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "lint": "npx tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'"
+    "lint": "npx eslint 'src/**/*.ts' 'test/**/*.ts'"
   }
 }

@@ -1,12 +1,13 @@
 import { expect } from "chai";
 import * as faker from "faker";
 import _ from "lodash";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as _mocha from "mocha";
 import { IClientOptions, MqttClient } from "mqtt";
 import HomieDevice, { DefaultConfiguration, IHomieDeviceConfiguration } from "../src/HomieDevice";
 import MqttStub from "./mqttStub";
 
-export const makeDeviceConfig = (config?: IHomieDeviceConfiguration) => {
+export const makeDeviceConfig = (config?: IHomieDeviceConfiguration): IHomieDeviceConfiguration => {
   return _.merge({}, DefaultConfiguration, {
     firmwareName: faker.system.fileName(),
     firmwareVersion: faker.system.semver(),
@@ -16,7 +17,7 @@ export const makeDeviceConfig = (config?: IHomieDeviceConfiguration) => {
     },
     name: faker.internet.domainWord(),
   } as unknown as IHomieDeviceConfiguration,
-    config);
+  config);
 };
 
 export interface IHomieDeviceTest {
@@ -82,9 +83,9 @@ describe("Homie Device", () => {
 
     it("emits all device messages as 'message' events", (done) => {
       let numMsgs = 0;
-      // tslint:disable-next-line:variable-name
+      
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       test.device.on("message", (topic: string, _msg: string) => {
-        // tslint:disable-next-line:no-unused-expression
         expect(topic).to.not.be.null;
         if (++numMsgs === 6) {
           test.device.end();
