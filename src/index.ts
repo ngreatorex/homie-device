@@ -1,15 +1,15 @@
-export { 
-    default as HomieDevice, 
-    IHomieDeviceConfiguration, 
+export {
+    default as HomieDevice,
+    IHomieDeviceConfiguration,
     IMqttConfiguration,
 } from "./HomieDevice";
 
-export { 
+export {
     default as HomieNode,
     IHomieNodeConfiguration,
 } from "./HomieNode";
 
-export { 
+export {
     default as HomieProperty,
     PropertyDataType,
     IHomiePropertyConfiguration,

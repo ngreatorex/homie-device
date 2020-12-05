@@ -1,25 +1,25 @@
-import _ from 'lodash';
-import HomieProperty, { IHomiePropertyConfiguration } from './HomieProperty';
-import HomieDevice from './HomieDevice';
-import { HomieTopologyElement, IHomieTopologyConfiguration } from './framework';
-import { IClientPublishOptions } from 'mqtt';
+import _ from "lodash";
+import { IClientPublishOptions } from "mqtt";
+import { HomieTopologyElement, IHomieTopologyConfiguration } from "./framework";
+import HomieDevice from "./HomieDevice";
+import HomieProperty, { IHomiePropertyConfiguration } from "./HomieProperty";
 
 export interface IHomieNodeConfiguration extends IHomieTopologyConfiguration {
-  name: string,
-  friendlyName: string,
-  type: string,
-  isRange: boolean,
-  startRange?: number,
-  endRange?: number,
-};
+  name: string;
+  friendlyName: string;
+  type: string;
+  isRange: boolean;
+  startRange?: number;
+  endRange?: number;
+}
 
 export const DefaultConfiguration: IHomieNodeConfiguration = {
-  type: "switch",
   isRange: false,
+  type: "switch",
 } as unknown as IHomieNodeConfiguration;
 
 export default class HomieNode extends HomieTopologyElement<HomieDevice, IHomieNodeConfiguration> {
-  private _properties: { [key: string]: HomieProperty };;
+  private properties$: { [key: string]: HomieProperty };
 
   constructor(parent: HomieDevice, config: IHomieNodeConfiguration) {
     super(_.merge({}, DefaultConfiguration, config), parent);
@@ -28,13 +28,13 @@ export default class HomieNode extends HomieTopologyElement<HomieDevice, IHomieN
       throw new Error(`A HomieNode name cannot include an underscore. The name provided was "${config.name}"`);
     }
 
-    this._properties = {};
+    this.properties$ = {};
     if (config.isRange) {
-      if (config.startRange == undefined) {
-        throw new Error('IsRange=true but StartRange=undefined');
+      if (config.startRange === undefined) {
+        throw new Error("IsRange=true but StartRange=undefined");
       }
-      if (config.endRange == undefined) {
-        throw new Error('IsRange=true but EndRange=undefined');
+      if (config.endRange === undefined) {
+        throw new Error("IsRange=true but EndRange=undefined");
       }
     }
   }
@@ -43,80 +43,80 @@ export default class HomieNode extends HomieTopologyElement<HomieDevice, IHomieN
   get isRange(): boolean { return this.config.isRange; }
   get startRange(): number | undefined { return this.config.startRange; }
   get endRange(): number | undefined { return this.config.endRange; }
-  get properties(): HomieProperty[] { return Object.values(this._properties); }
+  get properties(): HomieProperty[] { return Object.values(this.properties$); }
 
-  addProperty = (config: IHomiePropertyConfiguration): HomieProperty => {
+  public addProperty = (config: IHomiePropertyConfiguration): HomieProperty => {
     super.assertConfigurable();
-    return this._properties[config.name] = new HomieProperty(this, config);
+    return this.properties$[config.name] = new HomieProperty(this, config);
   }
 
-  getProperty = (propName: string): HomieProperty => this._properties[propName];
+  public getProperty = (propName: string): HomieProperty => this.properties$[propName];
 
-  /** 
-   * @internal 
-   * MQTT OnConnect event handler 
+  /**
+   * @internal
+   * MQTT OnConnect event handler
    */
-  onConnect = () => {
+  public onConnect = () => {
     super.onConnect();
 
     const properties: string[] = [];
-    _.each(this._properties, (property: HomieProperty) => {
+    _.each(this.properties$, (property: HomieProperty) => {
       properties.push(property.name);
     });
 
     this.publishAttributes({
-      'type': this.config.type,
-      'name': this.friendlyName,
-      'properties': properties.join(',')
+      name: this.friendlyName,
+      properties: properties.join(","),
+      type: this.config.type,
     });
 
     if (this.config.isRange) {
-      this.publishAttribute('array', `${this.config.startRange}-${this.config.endRange}`);
+      this.publishAttribute("array", `${this.config.startRange}-${this.config.endRange}`);
     }
 
-    _.each(this._properties, (prop: HomieProperty) => {
+    _.each(this.properties$, (prop: HomieProperty) => {
       prop.onConnect();
     });
   }
 
-//#region event handlers
-  onOffline = () => {
+  //#region event handlers
+  public onOffline = () => {
     super.onOffline();
-    _.each(this._properties, (prop: HomieProperty) => {
+    _.each(this.properties$, (prop: HomieProperty) => {
       prop.onOffline();
     });
   }
 
   // Called on mqtt client disconnect
-  onDisconnect = () => {
+  public onDisconnect = () => {
     super.onDisconnect();
-    _.each(this._properties, (prop: HomieProperty) => {
+    _.each(this.properties$, (prop: HomieProperty) => {
       prop.onDisconnect();
     });
   }
 
-  onError = (err: Error): void => {
+  public onError = (err: Error): void => {
     super.onError(err);
-    _.each(this._properties, (prop: HomieProperty) => {
+    _.each(this.properties$, (prop: HomieProperty) => {
       prop.onError(err);
     });
   }
 
   // Called on every stats interval
-  onStatsInterval = () => {
+  public onStatsInterval = () => {
     super.onStatsInterval();
-    _.each(this._properties, (prop: HomieProperty) => {
+    _.each(this.properties$, (prop: HomieProperty) => {
       prop.onStatsInterval();
     });
   }
-//#endregion
+  //#endregion
 
   /**
-   * Publishes the value of the given HomieProperty 
+   * Publishes the value of the given HomieProperty
    * @internal
    */
-  publishPropertyValue = (property: HomieProperty, value: number | string | boolean) => {
-    let topic = this.isRange
+  public publishPropertyValue = (property: HomieProperty, value: number | string | boolean) => {
+    const topic = this.isRange
       ? `${this.name}_${property.rangeIndex}/${property.name}`
       : `${this.name}/${property.name}`;
     this.rawPublish(topic, value.toString(), { retain: property.retained } as IClientPublishOptions);
