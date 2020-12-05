@@ -1,17 +1,16 @@
 {
   "name": "@chrispyduck/homie-device",
   "description": "Homie Device for NodeJS",
-  "version": "1.0.3",
+  "version": "0.1.0",
   "author": {
-    "name": "Loren West",
-    "email": "open_source@lorenwest.com",
-    "url": "https://github.com/lorenwest"
+    "name": "Chris Carlson",
+    "url": "https://github.com/chrispyduck"
   },
   "main": "./dist/index",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "http://github.com/microclimates/homie-device.git"
+    "url": "http://github.com/chrispyduck/homie-device.git"
   },
   "keywords": [
     "Homie",
@@ -58,7 +57,6 @@
     "build": "tsc --build src",
     "rebuild": "npm run clean && npm install && npm run build",
     "test": "nyc --source-map --include 'src/**/*.ts' mocha --exit -r ts-node/register --grep '#Integration' --invert test/**/*.ts",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "postinstall": "npm run build"
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   }
 }
