@@ -31,6 +31,7 @@ export default class MQTTClientStub extends EventEmitter {
 
   public getPublishedMsg = (topic: string) => _.filter(this.publishedMsgs, { topic });
 
+  // tslint:disable-next-line:no-empty variable-name
   public subscribe = (_topic: string) => { };
 
   public simulateMessage = (topic: string, message: string) => {

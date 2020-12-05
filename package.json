@@ -1,7 +1,7 @@
 {
   "name": "@chrispyduck/homie-device",
   "description": "Homie Device for NodeJS",
-  "version": "0.1.0",
+  "version": "0.1.0-unstable",
   "author": {
     "name": "Chris Carlson",
     "url": "https://github.com/chrispyduck"
@@ -59,6 +59,7 @@
     "build": "tsc --build src",
     "rebuild": "npm run clean && npm install && npm run build",
     "test": "nyc --source-map --include 'src/**/*.ts' mocha --exit -r ts-node/register --grep '#Integration' --invert test/**/*.ts",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "lint": "npx tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'"
   }
 }
