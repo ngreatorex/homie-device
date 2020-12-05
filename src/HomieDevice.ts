@@ -114,6 +114,7 @@ export default class HomieDevice extends HomieTopologyRoot {
   }
 
   public onConnect = () => {
+    this.logger.verbose("Connected... creating standard publications and subscriptions");
     const nodes: string[] = [];
     _.each(this.nodes$, (node: HomieNode) => {
       const text = node.isRange ? `${node.name}[]` : node.name;
@@ -187,13 +188,16 @@ export default class HomieDevice extends HomieTopologyRoot {
   private onMessage = (topic: string, msg: string | null) => {
     const parts = topic.split("/");
     const deviceTopic = parts.slice(2).join("/");
-    // console.log(`received message: parts=${topic}, deviceTopic=${deviceTopic}`);
+    this.logger.debug(`received message: parts=${topic}, deviceTopic=${deviceTopic}`);
 
     // Emit broadcast messages to broadcast listeners
     if (parts[1] === "$broadcast") {
+      this.logger.debug(`emitting broadcast for ${deviceTopic}: ${msg}`);
       this.emit("broadcast", deviceTopic, msg);
       return;
     }
+
+    this.logger.debug(`emitting broadcast for ${deviceTopic}: ${msg}`);
 
     // Emit to listeners of all device topics
     this.emit("message", deviceTopic, msg);

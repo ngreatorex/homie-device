@@ -18,6 +18,7 @@ export default abstract class HomieTopologyWithConfiguration<TConfiguration exte
         this.configurable$ = false;
         super.onConnect();
         if (!Object.isFrozen(this.config$)) {
+            this.logger.debug("freezing configuration");
             this.config$ = Object.freeze(this.config$);
         }
     }

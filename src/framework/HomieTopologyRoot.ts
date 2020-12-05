@@ -18,9 +18,11 @@ export default abstract class HomieTopologyRoot extends HomieTopologyWithConfigu
         if (this.client$ === null) {
             throw new Error("client has not been initialized");
         }
+        // tslint:disable-next-line:whitespace
+        const resolvedTopic = `${this.config.mqtt?.base_topic || "homie"}/${path}`;
+        this.logger.debug(`publishing ${resolvedTopic}: ${value}`);
         this.client$.publish(
-            // tslint:disable-next-line:whitespace
-            `${this.config.mqtt?.base_topic || "homie"}/${path}`,
+            resolvedTopic,
             value,
             options || {} as IClientPublishOptions);
     }
@@ -29,6 +31,9 @@ export default abstract class HomieTopologyRoot extends HomieTopologyWithConfigu
         if (this.client$ === null) {
             throw new Error("client has not been initialized");
         }
-        this.client$.subscribe(path);
+        // tslint:disable-next-line:whitespace
+        const resolvedTopic = `${this.config.mqtt?.base_topic || "homie"}/${path}`;
+        this.logger.debug(`subscribing to ${resolvedTopic}`);
+        this.client$.subscribe(resolvedTopic);
     }
 }

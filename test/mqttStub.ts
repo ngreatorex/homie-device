@@ -1,39 +1,39 @@
-import _ from 'lodash';
-import { EventEmitter } from 'events';
-import { IClientOptions, IClientPublishOptions } from 'mqtt';
+import { EventEmitter } from "events";
+import _ from "lodash";
+import { IClientOptions, IClientPublishOptions } from "mqtt";
 
 export default class MQTTClientStub extends EventEmitter {
-  private readonly publishedMsgs: {topic: string, msg: string, opts: IClientPublishOptions}[] = [];
 
+  public static connect = (opts: IClientOptions) => {
+    const client = new MQTTClientStub(opts);
+    setTimeout(() => {
+      client.emit("connect");
+    }, 1);
+    return client;
+  }
+  private readonly publishedMsgs: Array<{topic: string, msg: string, opts: IClientPublishOptions}> = [];
+
+  // tslint:disable-next-line:variable-name
   constructor(_opts: IClientOptions) {
     super();
     this.publishedMsgs = [];
   }
 
-  static connect = (opts: IClientOptions) => {
-    const client = new MQTTClientStub(opts);
-    setTimeout(() => {
-      client.emit('connect');
-    }, 1);
-    return client;
-  }
-
-  publish = (topic: string, msg: string, opts: IClientPublishOptions) => {
+  public publish = (topic: string, msg: string, opts: IClientPublishOptions) => {
     this.publishedMsgs.push({ topic, msg, opts });
     setTimeout(() => {
       // Auto subscribe to all published messages
-      this.emit('message', topic, msg);
+      this.emit("message", topic, msg);
     }, 1);
   }
 
-  end = () => this.emit('close');
+  public end = () => this.emit("close");
 
-  getPublishedMsg = (topic: string) => _.filter(this.publishedMsgs, { topic });
+  public getPublishedMsg = (topic: string) => _.filter(this.publishedMsgs, { topic });
 
-  subscribe = (_topic: string) => { }
+  public subscribe = (_topic: string) => { };
 
-  simulateMessage = (topic: string, message: string) => {
-    this.emit('message', topic, message);
+  public simulateMessage = (topic: string, message: string) => {
+    this.emit("message", topic, message);
   }
-};
-
+}

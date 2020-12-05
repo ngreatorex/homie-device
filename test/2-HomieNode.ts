@@ -1,21 +1,21 @@
 import { expect } from "chai";
-import HomieNode, { IHomieNodeConfiguration, DefaultConfiguration as DefaultNodeConfiguration } from '../src/HomieNode';
-import { IHomieDeviceConfiguration } from "../src/HomieDevice";
 import * as faker from "faker";
 import * as _ from "lodash";
-import { makeDevice, IHomieDeviceTest } from "./1-HomieDevice";
+import { IHomieDeviceConfiguration } from "../src/HomieDevice";
+import HomieNode, { DefaultConfiguration as DefaultNodeConfiguration, IHomieNodeConfiguration } from "../src/HomieNode";
+import { IHomieDeviceTest, makeDevice } from "./1-HomieDevice";
 
 export const makeNodeConfig = (config?: IHomieNodeConfiguration) => {
   return _.merge({}, DefaultNodeConfiguration, {
-    name: faker.internet.domainWord(),
     friendlyName: faker.internet.domainWord(),
+    name: faker.internet.domainWord(),
     type: faker.internet.domainWord(),
   }, config);
-}
+};
 
 export interface IHomieNodeTest extends IHomieDeviceTest {
-  node: HomieNode,
-  nodeConfig: IHomieNodeConfiguration
+  node: HomieNode;
+  nodeConfig: IHomieNodeConfiguration;
 }
 
 export const makeNode = (args: {
@@ -49,13 +49,14 @@ describe("Homie Node", () => {
 
     let test: IHomieNodeTest;
     afterEach(() => {
-      if (test.device.isConnected)
+      if (test.device.isConnected) {
         test.device.end();
+      }
     });
 
-    it("publishes the node name on connect", done => {
+    it("publishes the node name on connect", (done) => {
       test = makeNode();
-      test.device.on(`message:${test.nodeConfig.name}/$name`, msg => {
+      test.device.on(`message:${test.nodeConfig.name}/$name`, (msg) => {
         expect(msg).to.equal(test.nodeConfig.friendlyName);
         test.device.end();
         done();
@@ -63,9 +64,9 @@ describe("Homie Node", () => {
       test.device.setup();
     });
 
-    it("publishes the node list on connect", done => {
+    it("publishes the node list on connect", (done) => {
       test = makeNode();
-      test.device.on('message:$nodes', msg => {
+      test.device.on("message:$nodes", (msg) => {
         expect(msg).to.equal(test.nodeConfig.name);
         test.device.end();
         done();
@@ -73,23 +74,23 @@ describe("Homie Node", () => {
       test.device.setup();
     });
 
-    it("publishes the node array on connect", done => {
+    it("publishes the node array on connect", (done) => {
       test = makeNode({
-        nodeConfig: { startRange: 0, endRange: 100, isRange: true } as unknown as IHomieNodeConfiguration
+        nodeConfig: { startRange: 0, endRange: 100, isRange: true } as unknown as IHomieNodeConfiguration,
       });
-      test.device.on(`message:${test.nodeConfig.name}/$array`, msg => {
-        expect(msg).to.equal('0-100');
+      test.device.on(`message:${test.nodeConfig.name}/$array`, (msg) => {
+        expect(msg).to.equal("0-100");
         test.device.end();
         done();
       });
       test.device.setup();
     });
 
-    it("publishes the node list with array syntax on connect", done => {
+    it("publishes the node list with array syntax on connect", (done) => {
       test = makeNode({
-        nodeConfig: { startRange: 0, endRange: 1, isRange: true } as unknown as IHomieNodeConfiguration
+        nodeConfig: { startRange: 0, endRange: 1, isRange: true } as unknown as IHomieNodeConfiguration,
       });
-      test.device.on('message:$nodes', msg => {
+      test.device.on("message:$nodes", (msg) => {
         expect(msg).to.equal(`${test.nodeConfig.name}[]`);
         test.device.end();
         done();
@@ -97,13 +98,13 @@ describe("Homie Node", () => {
       test.device.setup();
     });
 
-    it("publishes node stats at a determined interval", done => {
+    it("publishes node stats at a determined interval", (done) => {
       test = makeNode({ deviceConfig: {
-        statsInterval: 0.1
+        statsInterval: 0.1,
       } as unknown as IHomieDeviceConfiguration});
       let numMsgs = 0;
-      test.node.on('stats-interval', () => {
-        if (++numMsgs == 3) {
+      test.node.on("stats-interval", () => {
+        if (++numMsgs === 3) {
           test.device.end();
           done();
         }

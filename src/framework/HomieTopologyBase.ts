@@ -52,7 +52,6 @@ export default abstract class HomieTopologyBase extends EventEmitter {
             safeOptions = options as IClientPublishOptions;
              }
 
-        this.logger.debug(`publish: ${path} = ${value}`);
         this.rawPublish(`${this.name}/${path}`, value, safeOptions);
     }
 //#endregion
@@ -67,7 +66,6 @@ export default abstract class HomieTopologyBase extends EventEmitter {
             path = path.substring(1);
         }
 
-        this.logger.debug(`subscribing to path "${path}"`);
         this.rawSubscribe(`${this.name}/${path}`);
     }
 //#endregion
@@ -89,7 +87,7 @@ export default abstract class HomieTopologyBase extends EventEmitter {
      */
     public onDisconnect(): void {
         this.isConnected$ = false;
-        this.logger.debug("disconnected");
+        this.logger.verbose("Disconnected");
         this.emit("disconnect");
     }
 

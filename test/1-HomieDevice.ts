@@ -1,51 +1,51 @@
-import * as _mocha from "mocha";
 import { expect } from "chai";
-import HomieDevice, { IHomieDeviceConfiguration, DefaultConfiguration } from '../src/HomieDevice';
-import MqttStub from './mqttStub';
 import * as faker from "faker";
-import { IClientOptions, MqttClient } from "mqtt";
 import _ from "lodash";
+import * as _mocha from "mocha";
+import { IClientOptions, MqttClient } from "mqtt";
+import HomieDevice, { DefaultConfiguration, IHomieDeviceConfiguration } from "../src/HomieDevice";
+import MqttStub from "./mqttStub";
 
 export const makeDeviceConfig = (config?: IHomieDeviceConfiguration) => {
   return _.merge({}, DefaultConfiguration, {
-    name: faker.internet.domainWord(),
-    friendlyName: faker.internet.userName(),
-    firmwareVersion: faker.system.semver(),
     firmwareName: faker.system.fileName(),
+    firmwareVersion: faker.system.semver(),
+    friendlyName: faker.internet.userName(),
     mqtt: {
       connectionFactory: MqttStub.connect,
     },
+    name: faker.internet.domainWord(),
   } as unknown as IHomieDeviceConfiguration,
     config);
-}
+};
 
 export interface IHomieDeviceTest {
-  device: HomieDevice,
-  deviceConfig: IHomieDeviceConfiguration,
-  mqtt: MqttStub,
+  device: HomieDevice;
+  deviceConfig: IHomieDeviceConfiguration;
+  mqtt: MqttStub;
 }
 
 export const makeDevice = (config?: IHomieDeviceConfiguration): IHomieDeviceTest => {
-  let mqttStub: MqttStub | undefined = undefined;
+  let mqttStub: MqttStub | undefined;
   config = makeDeviceConfig(_.merge(config, {
     mqtt: {
       connectionFactory: () => {
         mqttStub = MqttStub.connect({} as IClientOptions);
-        return mqttStub as unknown as MqttClient
-      }
-    }
+        return mqttStub as unknown as MqttClient;
+      },
+    },
   }));
   return {
     device: new HomieDevice(config),
     deviceConfig: config,
     get mqtt() {
-      if (mqttStub == undefined) {
+      if (mqttStub === undefined) {
         throw new Error("MQTT client mock has not been created. Did you forget to call device.setup()?");
       }
       return mqttStub;
-    }
+    },
   };
-}
+};
 
 describe("Homie Device", () => {
 
@@ -61,7 +61,7 @@ describe("Homie Device", () => {
 
     it("creates using new HomieDevice(IHomieDeviceConfiguration)", () => {
       const config = makeDeviceConfig();
-      const testDevice = new HomieDevice(config)
+      const testDevice = new HomieDevice(config);
       expect(testDevice).to.be.an.instanceOf(HomieDevice);
       expect(testDevice).to.have.property("name").equal(config.name); // also verifies inheritance from default configuration
       expect(testDevice).to.have.property("config").that.deep.equal(config);
@@ -75,15 +75,18 @@ describe("Homie Device", () => {
       test = makeDevice();
     });
     afterEach(() => {
-      if (test.device.isConnected)
+      if (test.device.isConnected) {
         test.device.end();
+      }
     });
 
-    it("emits all device messages as 'message' events", done => {
+    it("emits all device messages as 'message' events", (done) => {
       let numMsgs = 0;
-      test.device.on('message', (topic: string, _msg: string) => {
+      // tslint:disable-next-line:variable-name
+      test.device.on("message", (topic: string, _msg: string) => {
+        // tslint:disable-next-line:no-unused-expression
         expect(topic).to.not.be.null;
-        if (++numMsgs == 6) {
+        if (++numMsgs === 6) {
           test.device.end();
           done();
         }
@@ -91,8 +94,8 @@ describe("Homie Device", () => {
       test.device.setup();
     });
 
-    it("can subscribe to a sub-topic individually", done => {
-      test.device.on('message:$name', (msg: string) => {
+    it("can subscribe to a sub-topic individually", (done) => {
+      test.device.on("message:$name", (msg: string) => {
         expect(msg).to.equal(test.device.friendlyName);
         done();
       });
@@ -108,15 +111,16 @@ describe("Homie Device", () => {
       test = makeDevice();
     });
     afterEach(() => {
-      if (test.device.isConnected)
+      if (test.device.isConnected) {
         test.device.end();
+      }
     });
 
     const time = `${Date.now()}`;
-    it("emits the 'broadcast' event on device/$broadcast/... messages", done => {
-      test.device.on('broadcast', (topic: string, msg: string) => {
-        if (topic != 'longtime') { return; }
-        expect(topic).to.equal('longtime');
+    it("emits the 'broadcast' event on device/$broadcast/... messages", (done) => {
+      test.device.on("broadcast", (topic: string, msg: string) => {
+        if (topic !== "longtime") { return; }
+        expect(topic).to.equal("longtime");
         expect(msg).to.equal(time);
         test.device.end();
         done();
@@ -125,7 +129,7 @@ describe("Homie Device", () => {
 
       // Simulate an out-of-band publish
       setTimeout(() => {
-        test.mqtt.simulateMessage('homie/$broadcast/longtime', time);
+        test.mqtt.simulateMessage("homie/$broadcast/longtime", time);
       }, 50);
     });
 
