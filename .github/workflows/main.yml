@@ -21,7 +21,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-        registry-url: https://registry.npmjs.org
+        registry-url: https://registry.npmjs.org/
+        token: ${{ secrets.NPM_TOKEN }}
         scope: chrispyduck 
 
     - run: npm install
@@ -34,8 +35,12 @@ jobs:
       env:
         CI: true
     
-    - run: npm publish
+    - name: Package (npmjs)
       if: github.ref == 'refs/heads/main'
+      run: |
+        echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+        echo "@chrispyduck=https://registry.npmjs.org/" >> .npmrc
+        npm publish --access public 
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     
@@ -48,12 +53,11 @@ jobs:
         scope: chrispyduck 
         always-auth: true
 
-    - name: Authenticate with the GitHub Package Registry
+    - name: Publish (GitHub Package Registry)
+      if: github.ref == 'refs/heads/main'
       run: |
         echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > .npmrc
         echo "@chrispyduck=https://npm.pkg.github.com/" >> .npmrc
-
-    - run: npm publish
-      if: github.ref == 'refs/heads/main'
+        npm publish --access public
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
