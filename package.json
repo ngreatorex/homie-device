@@ -24,10 +24,6 @@
     "ActiveMQ",
     "RabbitMQ"
   ],
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com/"
-  },
   "devDependencies": {
     "@bazel/typescript": "^1.2.4",
     "@istanbuljs/nyc-config-typescript": "^1.0.1",

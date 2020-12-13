@@ -48,6 +48,11 @@ jobs:
         scope: chrispyduck 
         always-auth: true
 
+    - name: Authenticate with the GitHub Package Registry
+      run: |
+        echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > .npmrc
+        echo "@chrispyduck=https://npm.pkg.github.com/" >> .npmrc
+
     - run: npm publish
       if: github.ref == 'refs/heads/main'
       env:
