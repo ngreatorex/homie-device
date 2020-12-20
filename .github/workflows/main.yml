@@ -36,7 +36,7 @@ jobs:
         CI: true
     
     - name: Update Package Version
-      run: npx version-from-git --no-git-tag-version
+      run: npm version 0.1.${GITHUB_RUN_NUMBER} --no-git-tag-version
 
     - name: Publish (npmjs)
       if: github.ref == 'refs/heads/main'
