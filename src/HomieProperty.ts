@@ -26,8 +26,6 @@ export const DefaultConfiguration: IHomiePropertyConfiguration = {
 } as unknown as IHomiePropertyConfiguration;
 
 export default class HomieProperty extends HomieTopologyElement<HomieNode, IHomiePropertyConfiguration> {
-  private rangeIndex$: number | null | undefined;
-
   constructor(parent: HomieNode, config: IHomiePropertyConfiguration) {
     super(_.merge({}, DefaultConfiguration, config), parent);
   }
@@ -48,15 +46,6 @@ export default class HomieProperty extends HomieTopologyElement<HomieNode, IHomi
     this.config.retained = value;
   }
   public get retained(): boolean { return this.config.retained; }
-
-  public set rangeIndex(value: number | null | undefined) {
-    if (!_.isInteger(value)) {
-      throw new Error("rangeIndex must be an integer");
-    }
-
-    this.rangeIndex$ = value;
-  }
-  public get rangeIndex(): number | null | undefined { return this.rangeIndex$; }
 
   public get settable(): boolean { return this.config.settable; }
   public set settable(value: boolean) {
@@ -92,5 +81,7 @@ export default class HomieProperty extends HomieTopologyElement<HomieNode, IHomi
   /**
    * Publishes the current value of this HomieProperty
    */
-  public publishValue = (value: string | number | boolean): void => this.parent.publishPropertyValue(this, value);
+  public publishValue = (value: string | number | boolean, rangeIndex?: number): void => {
+    this.parent.publishPropertyValue(this, value, rangeIndex);
+  } 
 }

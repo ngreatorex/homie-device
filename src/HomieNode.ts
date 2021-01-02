@@ -115,9 +115,14 @@ export default class HomieNode extends HomieTopologyElement<HomieDevice, IHomieN
    * Publishes the value of the given HomieProperty
    * @internal
    */
-  public publishPropertyValue = (property: HomieProperty, value: number | string | boolean): void => {
+  public publishPropertyValue = (property: HomieProperty, value: number | string | boolean, rangeIndex?: number): void => {
+    if (this.isRange && rangeIndex === undefined)
+      throw new Error("This node represents a range, but no range index was specified");
+    else if (!this.isRange && rangeIndex !== undefined)
+      throw new Error("This node does not represent a range, but a range index was specified");
+
     const topic = this.isRange
-      ? `${this.name}_${property.rangeIndex}/${property.name}`
+      ? `${this.name}_${rangeIndex}/${property.name}`
       : `${this.name}/${property.name}`;
     this.rawPublish(topic, value.toString(), { retain: property.retained } as IClientPublishOptions);
   }

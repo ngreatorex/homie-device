@@ -3,6 +3,7 @@ import * as faker from "faker";
 import * as _ from "lodash";
 import { IHomieDeviceConfiguration } from "../src/HomieDevice";
 import HomieNode, { DefaultConfiguration as DefaultNodeConfiguration, IHomieNodeConfiguration } from "../src/HomieNode";
+import { PropertyDataType } from "../src/HomieProperty";
 import { IHomieDeviceTest, makeDevice } from "./1-HomieDevice";
 
 export const makeNodeConfig = (config?: IHomieNodeConfiguration): IHomieNodeConfiguration => {
@@ -114,5 +115,37 @@ describe("Homie Node", () => {
       test.device.setup();
     });
 
+    it("publish with index for non-indexed property", () => {
+      test = makeNode({
+        nodeConfig: { isRange: false } as unknown as IHomieNodeConfiguration,
+      });
+      const property = test.node.addProperty({
+        name: "test",
+        friendlyName: "test",
+        dataType: PropertyDataType.string,
+        settable: true,
+        retained: true,
+      });
+      test.device.setup();
+      expect(() => test.node.publishPropertyValue(property, "123", 10)).to.throw;
+    });
+
+    it("publish with index for indexed property", () => {
+      test = makeNode({
+        nodeConfig: { isRange: true, startRange: 0, endRange: 10 } as unknown as IHomieNodeConfiguration,
+      });
+      const property = test.node.addProperty({
+        name: "test",
+        friendlyName: "test",
+        dataType: PropertyDataType.string,
+        settable: true,
+        retained: true,
+      });
+      test.device.setup();
+      expect(() => test.node.publishPropertyValue(property, "123", 10)).to.not.throw;
+      expect(() => test.node.publishPropertyValue(property, "123", 0)).to.not.throw;
+      expect(() => test.node.publishPropertyValue(property, "123", -1)).to.throw;
+      expect(() => test.node.publishPropertyValue(property, "123", 11)).to.throw;
+    });
   });
 });
