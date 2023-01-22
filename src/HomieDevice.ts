@@ -85,7 +85,7 @@ export default class HomieDevice extends HomieTopologyRoot {
         payload: "lost",
         qos: 0,
         retain: true,
-        topic: `${this.name}/$state`,
+        topic: `${this.config.mqtt.base_topic}/${this.name}/$state`,
       },
     }) as mqtt.IClientOptions;
     // tslint:disable-next-line:whitespace
