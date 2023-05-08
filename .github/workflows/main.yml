@@ -43,7 +43,7 @@ jobs:
       run: npm version 0.1.${GITHUB_RUN_NUMBER} --no-git-tag-version
 
     - name: Publish (GitHub Package Registry)
-      if: github.ref == 'refs/heads/main' && secrets.GITHUB_TOKEN != ''
+      if: github.ref == 'refs/heads/main' && env.GITHUB_TOKEN != ''
       run: |
         echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > .npmrc
         echo "@ngreatorex=https://npm.pkg.github.com/" >> .npmrc
