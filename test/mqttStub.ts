@@ -10,6 +10,8 @@ export type PublishedMessage = {
 
 export default class MQTTClientStub extends EventEmitter {
 
+  public readonly clientOptions: IClientOptions;
+
   public static connect = (opts: IClientOptions): MQTTClientStub => {
     const client = new MQTTClientStub(opts);
     setTimeout(() => {
@@ -22,15 +24,14 @@ export default class MQTTClientStub extends EventEmitter {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(_opts: IClientOptions) {
     super();
+    this.clientOptions = _opts;
     this.publishedMsgs = [];
   }
 
   public publish = (topic: string, msg: string, opts: IClientPublishOptions): void => {
     this.publishedMsgs.push({ topic, msg, opts });
-    setTimeout(() => {
-      // Auto subscribe to all published messages
-      this.emit("message", topic, msg);
-    }, 1);
+    // Auto subscribe to all published messages
+    this.emit("message", topic, msg);
   }
 
   public end = (): void => {
