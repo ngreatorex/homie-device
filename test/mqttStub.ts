@@ -10,6 +10,8 @@ export type PublishedMessage = {
 
 export default class MQTTClientStub extends EventEmitter {
 
+  public readonly clientOptions: IClientOptions;
+
   public static connect = (opts: IClientOptions): MQTTClientStub => {
     const client = new MQTTClientStub(opts);
     setTimeout(() => {
@@ -22,6 +24,7 @@ export default class MQTTClientStub extends EventEmitter {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(_opts: IClientOptions) {
     super();
+    this.clientOptions = _opts;
     this.publishedMsgs = [];
   }
 

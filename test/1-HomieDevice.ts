@@ -30,8 +30,8 @@ export const makeDevice = (config?: IHomieDeviceConfiguration): IHomieDeviceTest
   let mqttStub: MqttStub | undefined;
   config = makeDeviceConfig(_.merge(config, {
     mqtt: {
-      connectionFactory: () => {
-        mqttStub = MqttStub.connect({} as IClientOptions);
+      connectionFactory: (opts: IClientOptions) => {
+        mqttStub = MqttStub.connect(opts);
         return mqttStub as unknown as MqttClient;
       },
     },
@@ -79,6 +79,18 @@ describe("Homie Device", () => {
       if (test.device.isConnected) {
         test.device.end();
       }
+    });
+
+    it("passes will to MQTT client", () => {
+      const will = {
+        payload: "lost",
+        retain: true,
+        topic: `${test.deviceConfig.mqtt?.base_topic}/${test.deviceConfig.name}/$state`,
+      };
+      test.device.setup();
+
+      expect(test.mqtt.clientOptions).to.not.be.undefined;
+      expect(test.mqtt.clientOptions).to.have.property("will").to.include(will);
     });
 
     it("emits all device messages as 'message' events", (done) => {
