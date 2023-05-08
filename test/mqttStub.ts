@@ -30,10 +30,8 @@ export default class MQTTClientStub extends EventEmitter {
 
   public publish = (topic: string, msg: string, opts: IClientPublishOptions): void => {
     this.publishedMsgs.push({ topic, msg, opts });
-    setTimeout(() => {
-      // Auto subscribe to all published messages
-      this.emit("message", topic, msg);
-    }, 1);
+    // Auto subscribe to all published messages
+    this.emit("message", topic, msg);
   }
 
   public end = (): void => {
