@@ -21,13 +21,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Configure Node.js ${{ matrix.node-version }} for npmjs
+    - name: Configure Node.js ${{ matrix.node-version }} for GPR
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-        registry-url: https://registry.npmjs.org/
-        token: ${{ secrets.NPM_TOKEN }}
-        scope: chrispyduck 
+        registry-url: https://npm.pkg.github.com  
+        scope: ngreatorex 
+        always-auth: true
 
     - run: npm install
 
@@ -42,29 +42,11 @@ jobs:
     - name: Update Package Version
       run: npm version 0.1.${GITHUB_RUN_NUMBER} --no-git-tag-version
 
-    - name: Publish (npmjs)
-      if: github.ref == 'refs/heads/main'
-      run: |
-        echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
-        echo "@chrispyduck=https://registry.npmjs.org/" >> .npmrc
-        npm publish --access public 
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-    
-    - name: Configure Node.js ${{ matrix.node-version }} for GPR
-      if: github.ref == 'refs/heads/main'
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-        registry-url: https://npm.pkg.github.com  
-        scope: chrispyduck 
-        always-auth: true
-
     - name: Publish (GitHub Package Registry)
-      if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/main' && secrets.GITHUB_TOKEN != ''
       run: |
         echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > .npmrc
-        echo "@chrispyduck=https://npm.pkg.github.com/" >> .npmrc
+        echo "@ngreatorex=https://npm.pkg.github.com/" >> .npmrc
         npm publish --access public
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
