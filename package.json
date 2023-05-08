@@ -1,7 +1,7 @@
 {
-  "name": "@chrispyduck/homie-device",
+  "name": "@ngreatorex/homie-device",
   "description": "Homie Device for NodeJS",
-  "version": "0.1.1-unstable",
+  "version": "0.2.1-unstable",
   "author": {
     "name": "Chris Carlson",
     "url": "https://github.com/chrispyduck"
